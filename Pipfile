@@ -9,8 +9,6 @@ verify_ssl = true
 django-heroku = "*"
 gunicorn = "*"
 django-cors-headers = "*"
-Scrapy = "*"
-sqlalchemy = "*"
 Pillow = "*"
 
 [requires]
