@@ -4,7 +4,7 @@ from django.http.response import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from chat.models import Message, UserProfile
+from chat.models import Message
 from chat.serializers import MessageSerializer, UserSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
