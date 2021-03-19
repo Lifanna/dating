@@ -2,7 +2,7 @@ import datetime
 from django.core.cache import cache
 from django.conf import settings
 
-from .models import UserProfile
+from chat.models import UserProfile
 
 
 class ActiveUserMiddleware:
