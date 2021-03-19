@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'main',
-    'chat',
+    # 'chat',
 ]
 
 MIDDLEWARE = [
@@ -56,7 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'chat.middleware.ActiveUserMiddleware',
+    # 'chat.middleware.ActiveUserMiddleware',
 ]
 
 ROOT_URLCONF = 'dating.urls'
@@ -93,6 +93,8 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
+
+# AUTH_USER_MODEL = "main.User"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
