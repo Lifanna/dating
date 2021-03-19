@@ -10,12 +10,14 @@ class HelloView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        # import geopy.distance
+        from haversine import haversine, Unit
 
-        # coords_1 = (52.2296756, 21.0122287)
-        # coords_2 = (52.406374, 16.9251681)
+        lyon = (45.7597, 4.8422) # (lat, lon)
+        paris = (48.8567, 2.3508)
 
-        # print(vincenty(coords_1, coords_2).km)
+        distance = haversine(lyon, paris)
+
+        print("DISTANCE:       ", distance)
 
         content = {'message': 'Hello, World!'}
         return Response(content)
