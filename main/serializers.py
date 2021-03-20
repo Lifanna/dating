@@ -32,7 +32,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ('aituUserId', 'first_name', 'last_name', 'id')
 
 
 # Register serializer
@@ -103,40 +103,29 @@ class LikeSerializer(serializers.ModelSerializer):
 
 
 # User serializer
-class UsersListSerializer(serializers.Serializer):
-    user_id = serializers.IntegerField()
+class UsersListSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    # user_id = serializers.IntegerField()
 
-    gender = serializers.CharField(label="Gender")
+    # gender = serializers.CharField(label="Gender")
 
-    city = serializers.IntegerField()
+    # city = serializers.IntegerField()
 
-    birth_date = serializers.DateField(label="Date of birth")
+    # birth_date = serializers.DateField(label="Date of birth")
 
-    # avatar = serializers.ImageField(upload_to='content')
+    # # avatar = serializers.ImageField(upload_to='content')
 
-    latitude = serializers.FloatField(label="Latitude")
+    # latitude = serializers.FloatField(label="Latitude")
 
-    longitude = serializers.FloatField(label="Longitude")
+    # longitude = serializers.FloatField(label="Longitude")
 
-    breefly = serializers.CharField(label="Breefly")
+    # breefly = serializers.CharField(label="Breefly")
 
-    is_deleted = serializers.BooleanField()
+    # is_deleted = serializers.BooleanField()
 
     class Meta:
-        fields = [
-            'aituUserId',
-            'first_name',
-            'last_name',
-            'user',
-            'gender',
-            'city',
-            'birth_date',
-            'avatar',
-            'latitude',
-            'longitude',
-            'breefly',
-            'is_deleted',
-        ]
+        model = main_models.UserProfile
+        fields = '__all__'
 
 
 class UpdateUserSerializer(serializers.ModelSerializer):

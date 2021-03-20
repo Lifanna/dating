@@ -19,6 +19,7 @@ class UsersListApi(APIView):
 
     def get(self, request, *args,  **kwargs):
         user_profile = models.UserProfile.objects.exclude(id=1)
+
         print(user_profile)
 
         serializer = self.serializer_class(user_profile, many=True)
