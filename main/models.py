@@ -110,6 +110,8 @@ class Comment(models.Model):
     comment_text = models.TextField("Comment text")
     
     comment_date = models.DateTimeField("Comment datetime")
+
+    total = models.IntegerField("Total number of comments")
     
     class Meta:
         unique_together = ('author', 'user_id',)

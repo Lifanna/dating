@@ -110,6 +110,8 @@ class CommentsApi(APIView):
         return get_object_or_404(models.Comment.objects.filter(user_id=userId))
 
     def get(self, request, *args,  **kwargs):
+        userComments = models.Comment.objects.values('user_id').annotate(total=Count('author_id'))
+
         comments = models.Comment.objects.filter(user_id=kwargs['userId'])
         serializer = serializers.CommentSerializer(comments, many=True)
         return Response(serializer.data)

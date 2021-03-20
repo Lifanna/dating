@@ -17,12 +17,14 @@ class CustomBackend(ModelBackend):
             return
         if not isinstance(username, str):
             return
-        
+
         allow = False
         try:
             user = User.objects.get(aituUserId__exact=username)
         except User.DoesNotExist:
             return
+        else:
+            allow = check_password(password, user.password)
         
         if self.user_can_authenticate(user):
             # once the user was logged in, we update all his information from NL
