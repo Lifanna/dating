@@ -2,6 +2,9 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from chat.models import Message
 
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)

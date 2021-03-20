@@ -23,4 +23,6 @@ urlpatterns = [
     path('token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', views.RegisterApi.as_view()),
+    path('registerprofile/', views.RegisterProfileApi.as_view()),
+    path('comment/<int:userId>', views.CommentsApi.as_view()),
 ]
