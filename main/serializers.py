@@ -105,23 +105,6 @@ class LikeSerializer(serializers.ModelSerializer):
 # User serializer
 class UsersListSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
-    # user_id = serializers.IntegerField()
-
-    # gender = serializers.CharField(label="Gender")
-
-    # city = serializers.IntegerField()
-
-    # birth_date = serializers.DateField(label="Date of birth")
-
-    # # avatar = serializers.ImageField(upload_to='content')
-
-    # latitude = serializers.FloatField(label="Latitude")
-
-    # longitude = serializers.FloatField(label="Longitude")
-
-    # breefly = serializers.CharField(label="Breefly")
-
-    # is_deleted = serializers.BooleanField()
 
     class Meta:
         model = main_models.UserProfile
@@ -158,3 +141,9 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = main_models.City
+        fields = '__all__'

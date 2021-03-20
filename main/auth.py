@@ -26,7 +26,7 @@ class CustomBackend(ModelBackend):
         else:
             allow = check_password(password, user.password)
         
-        if self.user_can_authenticate(user):
+        if self.user_can_authenticate(user) and allow:
             # once the user was logged in, we update all his information from NL
             return user
 

@@ -13,26 +13,18 @@ from django.db.models import Count
 
 
 class UsersListApi(APIView):
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.UsersListSerializer
 
     def get_object(self, userId):
         return get_object_or_404(models.User.objects.filter(user_id=userId))
 
     def get(self, request, *args,  **kwargs):
-        user_profile = models.UserProfile.objects.exclude(id=1)
-        userLikes = models.Like.objects.values('user_id').annotate(total=Count('author_id'))
-
-        likes = models.Like.objects.raw('''
-            select 1 as id, user_id as user, COUNT(author_id) as likes from main_like
-            join auth_user on
-            auth_user.id = main_like.author_id
-            GROUP BY user_id
-        ''')
+        user_profile = models.UserProfile.objects.exclude(id=request.user.id)
 
         serializer = self.serializer_class(user_profile, many=True)
 
-        return Response({"user": userLikes, "userProfile": serializer.data})
+        return Response({"userProfile": serializer.data})
 
 
 # class UsersNearestApi(APIView):
@@ -99,7 +91,7 @@ class UserProfileApi(GenericAPIView):
         return Response({
             "user": serializers.RegisterProfileSerializer(user_profile, context=self.get_serializer_context()).data,
         })
-    
+
 
 class CommentsApi(APIView):
     permission_classes = (IsAuthenticated,)
@@ -110,7 +102,8 @@ class CommentsApi(APIView):
         return get_object_or_404(models.Comment.objects.filter(user_id=userId))
 
     def get(self, request, *args,  **kwargs):
-        userComments = models.Comment.objects.values('user_id').annotate(total=Count('author_id'))
+        userComments = models.Comment.objects.exclude(id=request.user.id)
+        print(userComments)
 
         comments = models.Comment.objects.filter(user_id=kwargs['userId'])
         serializer = serializers.CommentSerializer(comments, many=True)
@@ -126,14 +119,15 @@ class CommentsApi(APIView):
 
 
 class LikeApi(APIView):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     serializer_class = serializers.LikeSerializer
     
     def get(self, request, *args,  **kwargs):
-        likes = models.Like.objects.filter(user_id=kwargs['userId'])
-        count = likes.count()
-        serializer = serializers.LikeSerializer(likes, many=True)
-        return Response({"count": count, "data": serializer.data})
+        # likes = models.Like.objects.filter(user_id=kwargs['userId'])
+        # count = likes.count()
+        userLikes = models.Like.objects.values('user_id').annotate(total=Count('author_id'))
+
+        return Response({"userLikes": userLikes})
     
     def post(self, request, *args,  **kwargs):
         like_serializer = self.serializer_class(data=request.data)
@@ -142,6 +136,7 @@ class LikeApi(APIView):
         like_serializer.save()
 
         return Response(data=like_serializer.data)
+
 
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -175,3 +170,14 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 class CustomTokenObtainPairView(TokenObtainPairView):
     # Replace the serializer with your custom
     serializer_class = serializers.CustomTokenObtainPairSerializer
+
+
+class CityApi(APIView):
+    serializer_class = serializers.CitySerializer
+
+    def get(self, request, *args,  **kwargs):
+        user_profile = models.City.objects.all()
+
+        serializer = self.serializer_class(user_profile, many=True)
+
+        return Response(serializer.data)

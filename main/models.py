@@ -96,7 +96,7 @@ class Like(models.Model):
     
     user_id = models.IntegerField("Was liked User")
 
-    total = models.IntegerField("Total number of likes")
+    total = models.IntegerField("Total number of likes", default=0)
 
     class Meta:
         unique_together = ('author', 'user_id',)
@@ -111,7 +111,7 @@ class Comment(models.Model):
     
     comment_date = models.DateTimeField("Comment datetime")
 
-    total = models.IntegerField("Total number of comments")
+    # total = models.IntegerField("Total number of comments")
     
     class Meta:
         unique_together = ('author', 'user_id',)
