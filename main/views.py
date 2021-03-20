@@ -9,7 +9,24 @@ from django.shortcuts import get_object_or_404
 from . import models
 
 
-class HelloView(APIView):
+class UsersListApi(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self, userId):
+        return get_object_or_404(models.User.objects.filter(user_id=userId))
+
+    def get(self, request, *args,  **kwargs):
+        print("AD:             ", request.user.aituUserId)
+        user = self.get_object(kwargs['userId'])
+
+        user_profile = models.UserProfile.objects.get()
+
+        serializer = self.serializer_class(user_profile)
+
+        return Response(serializer.data)
+
+
+class UsersNearestApi(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
@@ -41,11 +58,19 @@ class RegisterApi(GenericAPIView):
         })
 
 
-class RegisterProfileApi(GenericAPIView):
+class UserProfileApi(GenericAPIView):
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.RegisterProfileSerializer
 
-    def get(self, request):
-        return Response({"success": True})
+    def get_object(self, userId):
+        return get_object_or_404(models.UserProfile.objects.filter(user_id=userId))
+
+    def get(self, request, *args,  **kwargs):
+        request.user.aituUserId
+        user_profile = self.get_object(kwargs['userId'])
+        serializer = self.serializer_class(user_profile)
+
+        return Response({"user": request.user.aituUserId, "asd": serializer.data})
 
     def post(self, request, *args,  **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -53,11 +78,12 @@ class RegisterProfileApi(GenericAPIView):
         user_profile = serializer.save()
 
         return Response({
-            "user": serializers.UserSerializer(user_profile, context=self.get_serializer_context()).data,
+            "user": serializers.RegisterProfileSerializer(user_profile, context=self.get_serializer_context()).data,
         })
-
+    
 
 class CommentsApi(APIView):
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.CommentSerializer
 
     def get_object(self, userId):
@@ -67,7 +93,7 @@ class CommentsApi(APIView):
 
     def get(self, request, *args,  **kwargs):
         comment = self.get_object(kwargs['userId'])
-        serializer = comment
+        serializer = self.serializer_class(comment)
 
         return Response(serializer.data)
 

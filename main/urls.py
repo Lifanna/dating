@@ -19,10 +19,10 @@ from rest_framework_simplejwt import views as jwt_views
 from . import views
 
 urlpatterns = [
-    path('hello/', views.HelloView.as_view(), name='hello'),
+    path('userslist/', views.UsersListApi.as_view()),
     path('token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', views.RegisterApi.as_view()),
-    path('registerprofile/', views.RegisterProfileApi.as_view()),
     path('comment/<int:userId>', views.CommentsApi.as_view()),
+    path('users/<int:userId>', views.UserProfileApi.as_view()),
 ]
