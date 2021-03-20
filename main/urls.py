@@ -26,5 +26,6 @@ urlpatterns = [
     path('logout_all/', views.LogoutAllView.as_view(), name='auth_logout_all'),
     path('register/', views.RegisterApi.as_view()),
     path('comment/<int:userId>', views.CommentsApi.as_view()),
-    path('users/<int:userId>', views.UserProfileApi.as_view()),
+    # path('users/<int:userId>', views.UserProfileApi.as_view()),
+    path('userslist/', views.UserProfileApi.as_view()),
 ]
