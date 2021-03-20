@@ -61,7 +61,7 @@ class Command(BaseCommand):
                 coordinates[int(cityID)] = cityCoordinate
 
         admin = models.User(aituUserId='admin@example.com', first_name="Админ", last_name="Админович", is_staff=True, is_superuser=True)
-        admin.set_password("")
+        admin.set_password("admin")
         admin.save()
 
         df_names = pd.read_csv('main/management/commands/data.csv')
