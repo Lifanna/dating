@@ -11,18 +11,19 @@ from . import models
 
 
 class UsersListApi(APIView):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     serializer_class = serializers.UsersListSerializer
 
     def get_object(self, userId):
         return get_object_or_404(models.User.objects.filter(user_id=userId))
 
     def get(self, request, *args,  **kwargs):
-        user_profile = models.UserProfile.objects.exclude(id=request.user.id)
+        user_profile = models.UserProfile.objects.exclude(id=1)
+        print(user_profile)
 
         serializer = self.serializer_class(user_profile, many=True)
 
-        return Response({"user": request.user, "userProfile": serializer.data})
+        return Response({"user": 1, "userProfile": serializer.data})
 
 
 # class UsersNearestApi(APIView):
@@ -76,8 +77,9 @@ class UserProfileApi(GenericAPIView):
     def get(self, request, *args,  **kwargs):
         user_profile = self.get_object(request.user.id)
         serializer = self.serializer_class(user_profile)
+        user_serializer = serialzers.UserSerializer(request.user)
 
-        return Response(serializer.data)
+        return Response({"userInfo": user_seralizer.data, "userProfile": serializer.data})
 
     def post(self, request, *args,  **kwargs):
         models.City.objects.get_or_create(name="Karaganda")

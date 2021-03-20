@@ -103,10 +103,40 @@ class LikeSerializer(serializers.ModelSerializer):
 
 
 # User serializer
-class UsersListSerializer(serializers.ModelSerializer):
+class UsersListSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+
+    gender = serializers.CharField(label="Gender")
+
+    city = serializers.IntegerField()
+
+    birth_date = serializers.DateField(label="Date of birth")
+
+    # avatar = serializers.ImageField(upload_to='content')
+
+    latitude = serializers.FloatField(label="Latitude")
+
+    longitude = serializers.FloatField(label="Longitude")
+
+    breefly = serializers.TextField(label="Breefly")
+
+    is_deleted = serializers.BooleanField()
+
     class Meta:
-        model = main_models.UserProfile
-        fields = '__all__'
+        fields = [
+            'aituUserId',
+            'first_name',
+            'last_name',
+            'user',
+            'gender',
+            'city',
+            'birth_date',
+            'avatar',
+            'latitude',
+            'longitude',
+            'breefly',
+            'is_deleted',
+        ]
 
 
 class UpdateUserSerializer(serializers.ModelSerializer):
