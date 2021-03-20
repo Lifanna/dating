@@ -86,7 +86,7 @@ class UserProfileApi(GenericAPIView):
 
     def post(self, request, *args,  **kwargs):
         models.City.objects.get_or_create(name="Karaganda")
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=request.data, files=request.files)
         serializer.is_valid(raise_exception=True)
         user_profile = serializer.save()
 

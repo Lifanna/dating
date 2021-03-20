@@ -65,7 +65,7 @@ class RegisterProfileSerializer(serializers.ModelSerializer):
             gender = validated_data['gender'],
             city = validated_data['city'],
             birth_date = validated_data['birth_date'],
-            # avatar = validated_data['avatar'],
+            avatar = validated_data['avatar'],
             latitude = validated_data['latitude'],
             longitude = validated_data['longitude'],
             breefly = validated_data['breefly'],
