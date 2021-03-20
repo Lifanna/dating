@@ -20,7 +20,9 @@ class UsersListApi(APIView):
         return get_object_or_404(models.User.objects.filter(user_id=userId))
 
     def get(self, request, *args,  **kwargs):
-        user_profile = models.UserProfile.objects.exclude(id=request.user.id)
+        offset = kwargs["offset"]
+        limit = 5
+        user_profile = models.UserProfile.objects.exclude(id=request.user.id)[offset:offset + limit]
 
         serializer = self.serializer_class(user_profile, many=True)
 
