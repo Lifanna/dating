@@ -14,6 +14,21 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        # The default result (access/refresh tokens)
+        data = super(CustomTokenObtainPairSerializer, self).validate(attrs)
+        # Custom data you want to include
+        data.update({'aituUserId': self.user.aituUserId})
+        data.update({'first_name': self.user.first_name})
+        data.update({'last_name': self.user.last_name})
+        data.update({'id': self.user.id})
+        # and everything else you want to send in the response
+        return data
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -47,7 +62,6 @@ class RegisterProfileSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         userProfile = UserProfile.objects.create_user(
             user = validated_data['userId'],
-            external_id = validated_data['external_id'],
             gender = validated_data['gender'],
             city = validated_data['city'],
             birth_date = validated_data['birth_date'],
@@ -58,6 +72,19 @@ class RegisterProfileSerializer(serializers.ModelSerializer):
         )
 
         return userProfile
+
+    def update(self, instance, validated_data):
+        instance.gender = validated_data['gender']
+        instance.city = validated_data['city']
+        instance.birth_date = validated_data['birth_date']
+        instance.avatar = validated_data['avatar']
+        instance.latitude = validated_data['latitude']
+        instance.longitude = validated_data['longitude']
+        instance.breefly = validated_data['breefly']
+
+        instance.save()
+
+        return instance
 
 
 # User serializer
@@ -72,3 +99,35 @@ class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = main_models.Like
         fields = '__all__'
+
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email')
+        extra_kwargs = {
+            'first_name': {'required': True},
+            'last_name': {'required': True},
+        }
+
+    def validate_username(self, value):
+        user = self.context['request'].user
+        if User.objects.exclude(pk=user.pk).filter(aituUserId=value).exists():
+            raise serializers.ValidationError({"username": "This username is already in use."})
+        return value
+
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+
+        if user.pk != instance.pk:
+            raise serializers.ValidationError({"authorize": "You dont have permission for this user."})
+
+        instance.first_name = validated_data['first_name']
+        instance.last_name = validated_data['last_name']
+        instance.aituUserId = validated_data['aituUserId']
+
+        instance.save()
+
+        return instance

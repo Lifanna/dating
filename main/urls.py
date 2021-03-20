@@ -20,8 +20,10 @@ from . import views
 
 urlpatterns = [
     path('userslist/', views.UsersListApi.as_view()),
-    path('token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/', views.CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    path('logout/', views.LogoutView.as_view(), name='auth_logout'),
+    path('logout_all/', views.LogoutAllView.as_view(), name='auth_logout_all'),
     path('register/', views.RegisterApi.as_view()),
     path('comment/<int:userId>', views.CommentsApi.as_view()),
     path('users/<int:userId>', views.UserProfileApi.as_view()),
