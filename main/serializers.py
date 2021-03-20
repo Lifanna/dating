@@ -60,12 +60,12 @@ class RegisterProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        userProfile = UserProfile.objects.create_user(
-            user = validated_data['userId'],
+        userProfile = main_models.UserProfile.objects.create(
+            user = validated_data['user'],
             gender = validated_data['gender'],
             city = validated_data['city'],
             birth_date = validated_data['birth_date'],
-            avatar = validated_data['avatar'],
+            # avatar = validated_data['avatar'],
             latitude = validated_data['latitude'],
             longitude = validated_data['longitude'],
             breefly = validated_data['breefly'],
@@ -74,10 +74,11 @@ class RegisterProfileSerializer(serializers.ModelSerializer):
         return userProfile
 
     def update(self, instance, validated_data):
+        instance = main_models.UserProfile.objects.get(validated_data['user'])
         instance.gender = validated_data['gender']
         instance.city = validated_data['city']
         instance.birth_date = validated_data['birth_date']
-        instance.avatar = validated_data['avatar']
+        # instance.avatar = validated_data['avatar']
         instance.latitude = validated_data['latitude']
         instance.longitude = validated_data['longitude']
         instance.breefly = validated_data['breefly']

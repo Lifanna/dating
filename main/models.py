@@ -80,7 +80,7 @@ class UserProfile(models.Model):
 
     birth_date = models.DateField("Date of birth", blank=True, null=True)
 
-    avatar = models.ImageField(upload_to='content', blank=True, null=True)
+    avatar = models.ImageField(upload_to='content', blank=True, null=True, default="content/Aaron_Eckhart_0001.jpg")
 
     latitude = models.FloatField("Latitude")
 

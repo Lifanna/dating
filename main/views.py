@@ -2,7 +2,8 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, RetrieveAPIView
+from rest_framework_simplejwt.tokens import RefreshToken
 from . import serializers
 from haversine import haversine, Unit
 from django.shortcuts import get_object_or_404
@@ -66,8 +67,7 @@ class UserProfileApi(GenericAPIView):
         return get_object_or_404(models.UserProfile.objects.filter(user_id=userId))
 
     def get(self, request, *args,  **kwargs):
-        request.user.aituUserId
-        user_profile = self.get_object(kwargs['userId'])
+        user_profile = self.get_object(request.user.id)
         serializer = self.serializer_class(user_profile)
 
         return Response({"user": request.user.aituUserId, "asd": serializer.data})
@@ -84,25 +84,24 @@ class UserProfileApi(GenericAPIView):
 
 class CommentsApi(APIView):
     permission_classes = (IsAuthenticated,)
+    queryset = models.Comment.objects.all()
     serializer_class = serializers.CommentSerializer
 
     def get_object(self, userId):
-        obje = models.Comment.objects.all()
-        print(obje)
         return get_object_or_404(models.Comment.objects.filter(user_id=userId))
 
     def get(self, request, *args,  **kwargs):
-        comment = self.get_object(kwargs['userId'])
-        serializer = self.serializer_class(comment)
-
+        comments = models.Comment.objects.filter(user_id=kwargs['userId'])
+        serializer = serializers.CommentSerializer(comments, many=True)
         return Response(serializer.data)
 
     def post(self, request, *args,  **kwargs):
         comment_serializer = self.serializer_class(data=request.data)
 
+        comment_serializer.is_valid(raise_exception=True)
         comment_serializer.save()
 
-        return Response(data=comment_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(data=comment_serializer.data)
 
 
 class LogoutView(APIView):
@@ -114,9 +113,9 @@ class LogoutView(APIView):
             token = RefreshToken(refresh_token)
             token.blacklist()
 
-            return Response(status=status.HTTP_205_RESET_CONTENT)
+            return Response({"STATUS": "OK"})
         except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({"STATUS": "BAD"})
 
 
 class LogoutAllView(APIView):

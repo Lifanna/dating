@@ -12,12 +12,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'online']
+        fields = ['id', 'aituUserId', 'password', 'online']
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    sender = serializers.SlugRelatedField(many=False, slug_field='username', queryset=User.objects.all())
-    receiver = serializers.SlugRelatedField(many=False, slug_field='username', queryset=User.objects.all())
+    sender = serializers.SlugRelatedField(many=False, slug_field='aituUserId', queryset=User.objects.all())
+    receiver = serializers.SlugRelatedField(many=False, slug_field='aituUserId', queryset=User.objects.all())
 
     class Meta:
         model = Message
