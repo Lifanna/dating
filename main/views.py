@@ -77,7 +77,7 @@ class UserProfileApi(GenericAPIView):
         user_profile = self.get_object(request.user.id)
         serializer = self.serializer_class(user_profile)
 
-        return Response({"user": request.user.aituUserId, "asd": serializer.data})
+        return Response(serializer.data)
 
     def post(self, request, *args,  **kwargs):
         serializer = self.get_serializer(data=request.data)
