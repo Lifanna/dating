@@ -13,7 +13,7 @@ from django.db.models import Count
 
 
 class UsersListApi(APIView):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     serializer_class = serializers.UsersListSerializer
 
     def get_object(self, userId):
@@ -24,7 +24,7 @@ class UsersListApi(APIView):
 
         serializer = self.serializer_class(user_profile, many=True)
 
-        return Response({"userProfile": serializer.data})
+        return Response(serializer.data)
 
 
 # class UsersNearestApi(APIView):
@@ -102,12 +102,11 @@ class CommentsApi(APIView):
         return get_object_or_404(models.Comment.objects.filter(user_id=userId))
 
     def get(self, request, *args,  **kwargs):
-        userComments = models.Comment.objects.exclude(id=request.user.id)
-        print(userComments)
+        userComments = models.Comment.objects.values('user_id').annotate(total=Count('author_id'))
 
-        comments = models.Comment.objects.filter(user_id=kwargs['userId'])
-        serializer = serializers.CommentSerializer(comments, many=True)
-        return Response(serializer.data)
+        # comments = models.Comment.objects.filter(user_id=kwargs['userId'])
+        # serializer = serializers.CommentSerializer(userComments, many=True)
+        return Response({"userComments": userComments})
 
     def post(self, request, *args,  **kwargs):
         comment_serializer = self.serializer_class(data=request.data)
@@ -119,7 +118,7 @@ class CommentsApi(APIView):
 
 
 class LikeApi(APIView):
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.LikeSerializer
     
     def get(self, request, *args,  **kwargs):
