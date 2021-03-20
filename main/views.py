@@ -13,7 +13,7 @@ from django.db.models import Count
 
 
 class UsersListApi(APIView):
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.UsersListSerializer
 
     def get_object(self, userId):
@@ -93,6 +93,21 @@ class UserProfileApi(GenericAPIView):
 
         return Response({
             "user": serializers.RegisterProfileSerializer(user_profile, context=self.get_serializer_context()).data,
+        })
+    
+    def put(self, request, *args, **kwargs):
+        user_to_update = self.get_object(request.user.id)
+        user_to_update.gender = request.data.get("gender")
+        user_to_update.city = models.City.objects.get(id=request.data.get("city"))
+        user_to_update.birth_date = request.data.get("birth_date")
+        user_to_update.avatar = request.data.get("avatar")
+        user_to_update.latitude = request.data.get("latitude")
+        user_to_update.longitude = request.data.get("longitude")
+        user_to_update.breefly = request.data.get("breefly")
+        user_to_update.save()
+
+        return Response({
+            "user": serializers.RegisterProfileSerializer(user_to_update, context=self.get_serializer_context()).data,
         })
 
 
