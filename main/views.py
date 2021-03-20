@@ -22,7 +22,9 @@ class UsersListApi(APIView):
 
         serializer = self.serializer_class(user_profile, many=True)
 
-        return Response({"user": request.user, "userProfile": serializer.data})
+        users = models.User.objects.exclude(id=request.user.id)
+
+        return Response({"users": users, "userProfile": serializer.data})
 
 
 # class UsersNearestApi(APIView):
