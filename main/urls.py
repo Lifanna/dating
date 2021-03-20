@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework_simplejwt import views as jwt_views
 from . import views
+from django.conf.urls.static import static
+from dating import settings
 
 urlpatterns = [
     path('userslist/<int:offset>', views.UsersListApi.as_view()),
@@ -30,3 +32,8 @@ urlpatterns = [
     path('user/', views.UserProfileApi.as_view()),
     path('cities/', views.CityApi.as_view()),
 ]
+
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

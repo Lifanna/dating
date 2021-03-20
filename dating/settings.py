@@ -176,3 +176,11 @@ USER_ONLINE_TIMEOUT = 300
 # Number of seconds that we will keep track of inactive users for before
 # their last seen is removed from the cache
 USER_LASTSEEN_TIMEOUT = 60 * 60 * 24 * 7
+import os
+
+MEDIA_URL = f'http://localhost:8000/'
+
+STATIC_URL = '/content/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'content')
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)

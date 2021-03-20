@@ -24,7 +24,7 @@ class UsersListApi(APIView):
         limit = 5
         user_profile = models.UserProfile.objects.exclude(id=request.user.id)[offset:offset + limit]
 
-        serializer = self.serializer_class(user_profile, many=True)
+        serializer = self.serializer_class(user_profile, many=True, context={'request': request})
 
         return Response(serializer.data)
 

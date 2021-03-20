@@ -10,7 +10,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 
 from django.contrib.auth import get_user_model
-
+from dating import settings
 User = get_user_model()
 
 
@@ -105,6 +105,12 @@ class LikeSerializer(serializers.ModelSerializer):
 # User serializer
 class UsersListSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
+    avatar = serializers.SerializerMethodField()
+
+    def get_avatar(self, obj):
+        print("aaaaaaaaaaa", self.context)
+        request = self.context['request']
+        return request.build_absolute_uri(obj.avatar.url)
 
     class Meta:
         model = main_models.UserProfile
