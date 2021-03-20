@@ -11,7 +11,7 @@ from . import models
 
 
 class UsersListApi(APIView):
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.UsersListSerializer
 
     def get_object(self, userId):
@@ -22,7 +22,7 @@ class UsersListApi(APIView):
 
         serializer = self.serializer_class(user_profile, many=True)
 
-        return Response(serializer.data)
+        return Response({"user": request.user, "userProfile": serializer.data})
 
 
 # class UsersNearestApi(APIView):
