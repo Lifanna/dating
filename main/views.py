@@ -11,7 +11,7 @@ from . import models
 
 
 class UsersListApi(APIView):
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.UsersListSerializer
 
     def get_object(self, userId):
