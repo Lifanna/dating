@@ -8,23 +8,31 @@ from . import serializers
 from haversine import haversine, Unit
 from django.shortcuts import get_object_or_404
 from . import models
+from django.db.models import Count
+
 
 
 class UsersListApi(APIView):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     serializer_class = serializers.UsersListSerializer
 
     def get_object(self, userId):
         return get_object_or_404(models.User.objects.filter(user_id=userId))
 
     def get(self, request, *args,  **kwargs):
-        user_profile = models.UserProfile.objects.exclude(id=request.user.id)
+        user_profile = models.UserProfile.objects.exclude(id=1)
+        userLikes = models.Like.objects.values('user_id').annotate(total=Count('author_id'))
+
+        likes = models.Like.objects.raw('''
+            select 1 as id, user_id as user, COUNT(author_id) as likes from main_like
+            join auth_user on
+            auth_user.id = main_like.author_id
+            GROUP BY user_id
+        ''')
 
         serializer = self.serializer_class(user_profile, many=True)
 
-        users = models.User.objects.exclude(id=request.user.id)
-
-        return Response({"users": users, "userProfile": serializer.data})
+        return Response({"user": userLikes, "userProfile": serializer.data})
 
 
 # class UsersNearestApi(APIView):
@@ -78,8 +86,9 @@ class UserProfileApi(GenericAPIView):
     def get(self, request, *args,  **kwargs):
         user_profile = self.get_object(request.user.id)
         serializer = self.serializer_class(user_profile)
+        user_serializer = serializers.UserSerializer(request.user)
 
-        return Response(serializer.data)
+        return Response({"userInfo": user_serializer.data, "userProfile": serializer.data})
 
     def post(self, request, *args,  **kwargs):
         models.City.objects.get_or_create(name="Karaganda")
@@ -101,6 +110,8 @@ class CommentsApi(APIView):
         return get_object_or_404(models.Comment.objects.filter(user_id=userId))
 
     def get(self, request, *args,  **kwargs):
+        userComments = models.Comment.objects.values('user_id').annotate(total=Count('author_id'))
+
         comments = models.Comment.objects.filter(user_id=kwargs['userId'])
         serializer = serializers.CommentSerializer(comments, many=True)
         return Response(serializer.data)
