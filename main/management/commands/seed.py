@@ -60,9 +60,9 @@ class Command(BaseCommand):
                 cityCoordinate = line.split(':')[1]
                 coordinates[int(cityID)] = cityCoordinate
 
-        # admin = models.User(email='admin@example.com', first_name="Админ", last_name="Админович", is_staff=True, is_superuser=True)
-        # admin.set_password("")
-        # admin.save()
+        admin = models.User(aituUserId='admin@example.com', first_name="Админ", last_name="Админович", is_staff=True, is_superuser=True)
+        admin.set_password("")
+        admin.save()
 
         # df_names = pd.read_csv('main/management/commands/data.csv')
 
@@ -99,4 +99,4 @@ class Command(BaseCommand):
                 birth_date=self.get_random_birthday()
             )
 
-            # user_profile.save()
+            user_profile.save()
