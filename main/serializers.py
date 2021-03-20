@@ -118,7 +118,7 @@ class UsersListSerializer(serializers.Serializer):
 
     longitude = serializers.FloatField(label="Longitude")
 
-    breefly = serializers.TextField(label="Breefly")
+    breefly = serializers.CharField(label="Breefly")
 
     is_deleted = serializers.BooleanField()
 
