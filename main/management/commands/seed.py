@@ -69,7 +69,7 @@ class Command(BaseCommand):
         BASE_DIR = Path(__file__).resolve().parent
 
         name_surname = []
-        for i in range(0, 500):
+        for i in range(0, 100):
             first_name = df_names['name'][i]
             external_id = df_names['name'][i] + str(df_names['count'][i]) + str(df_names['rowid'][i])
 
