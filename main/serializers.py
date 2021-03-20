@@ -102,6 +102,13 @@ class LikeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+# User serializer
+class UsersListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = main_models.UserProfile
+        fields = '__all__'
+
+
 class UpdateUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
 

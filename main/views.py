@@ -11,35 +11,42 @@ from . import models
 
 
 class UsersListApi(APIView):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.UsersListSerializer
 
     def get_object(self, userId):
         return get_object_or_404(models.User.objects.filter(user_id=userId))
 
     def get(self, request, *args,  **kwargs):
-        print("AD:             ", request.user.aituUserId)
-        user = self.get_object(kwargs['userId'])
+        user_profile = models.UserProfile.objects.exclude(id=request.user.id)
 
-        user_profile = models.UserProfile.objects.get()
-
-        serializer = self.serializer_class(user_profile)
+        serializer = self.serializer_class(user_profile, many=True)
 
         return Response(serializer.data)
 
 
-class UsersNearestApi(APIView):
-    permission_classes = (IsAuthenticated,)
+# class UsersNearestApi(APIView):
+#     permission_classes = (IsAuthenticated,)
 
-    def get(self, request):
-        lyon = (45.7597, 4.8422) # (lat, lon)
-        paris = (48.8567, 2.3508)
+#     def get(self, request):
+#         user_profile = models.UserProfile.objects.get(id=request.user.id)
+        
+#         friends = models.UserProfile.objects.filter(
+#             latitude__lte=user_profile.latitude, 
+#             latitude__gte=user_profile.latitude,
+#             longitude__lte=user_profile.longitude, 
+#             longitude__gte=user_profile.longitude
+#         )
+#         friend_profile = models.UserProfile.objects.exclude(id=request.user.id)
+#         user_coords = tuple(user_profile.latitude, user_profile.longitude) # (lat, lon)
+#         friend_coords = tuple(user_profile.latitude, user_profile.longitude)
 
-        distance = haversine(lyon, paris)
+#         distance = haversine(lyon, paris)
 
-        print("DISTANCE:       ", distance)
+#         print("DISTANCE:       ", distance)
 
-        content = {'message': 'Hello, World!'}
-        return Response(content)
+#         content = {'message': 'Hello, World!'}
+#         return Response(content)
 
 
 class RegisterApi(GenericAPIView):
