@@ -13,26 +13,18 @@ from django.db.models import Count
 
 
 class UsersListApi(APIView):
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = serializers.UsersListSerializer
 
     def get_object(self, userId):
         return get_object_or_404(models.User.objects.filter(user_id=userId))
 
     def get(self, request, *args,  **kwargs):
-        user_profile = models.UserProfile.objects.exclude(id=1)
-        userLikes = models.Like.objects.values('user_id').annotate(total=Count('author_id'))
-
-        likes = models.Like.objects.raw('''
-            select 1 as id, user_id as user, COUNT(author_id) as likes from main_like
-            join auth_user on
-            auth_user.id = main_like.author_id
-            GROUP BY user_id
-        ''')
+        user_profile = models.UserProfile.objects.exclude(id=request.user.id)
 
         serializer = self.serializer_class(user_profile, many=True)
 
-        return Response({"user": userLikes, "userProfile": serializer.data})
+        return Response(serializer.data)
 
 
 # class UsersNearestApi(APIView):
