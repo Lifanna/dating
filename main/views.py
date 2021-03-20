@@ -77,9 +77,9 @@ class UserProfileApi(GenericAPIView):
     def get(self, request, *args,  **kwargs):
         user_profile = self.get_object(request.user.id)
         serializer = self.serializer_class(user_profile)
-        user_serializer = serialzers.UserSerializer(request.user)
+        user_serializer = serializers.UserSerializer(request.user)
 
-        return Response({"userInfo": user_seralizer.data, "userProfile": serializer.data})
+        return Response({"userInfo": user_serializer.data, "userProfile": serializer.data})
 
     def post(self, request, *args,  **kwargs):
         models.City.objects.get_or_create(name="Karaganda")
