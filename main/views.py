@@ -8,6 +8,8 @@ from . import serializers
 from haversine import haversine, Unit
 from django.shortcuts import get_object_or_404
 from . import models
+from django.db.models import Count
+
 
 
 class UsersListApi(APIView):
@@ -19,12 +21,18 @@ class UsersListApi(APIView):
 
     def get(self, request, *args,  **kwargs):
         user_profile = models.UserProfile.objects.exclude(id=1)
+        userLikes = models.Like.objects.values('user_id').annotate(total=Count('author_id'))
 
-        print(user_profile)
+        likes = models.Like.objects.raw('''
+            select 1 as id, user_id as user, COUNT(author_id) as likes from main_like
+            join auth_user on
+            auth_user.id = main_like.author_id
+            GROUP BY user_id
+        ''')
 
         serializer = self.serializer_class(user_profile, many=True)
 
-        return Response({"user": 1, "userProfile": serializer.data})
+        return Response({"user": userLikes, "userProfile": serializer.data})
 
 
 # class UsersNearestApi(APIView):

@@ -96,6 +96,8 @@ class Like(models.Model):
     
     user_id = models.IntegerField("Was liked User")
 
+    total = models.IntegerField("Total number of likes")
+
     class Meta:
         unique_together = ('author', 'user_id',)
 
