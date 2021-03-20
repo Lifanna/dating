@@ -27,4 +27,5 @@ urlpatterns = [
     path('register/', views.RegisterApi.as_view()),
     path('comment/<int:userId>', views.CommentsApi.as_view()),
     path('users/<int:userId>', views.UserProfileApi.as_view()),
+    path('likes/<int:userId>', views.LikeApi.as_view()),
 ]

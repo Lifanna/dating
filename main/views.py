@@ -70,7 +70,7 @@ class UserProfileApi(GenericAPIView):
         user_profile = self.get_object(request.user.id)
         serializer = self.serializer_class(user_profile)
 
-        return Response({"user": request.user.aituUserId, "asd": serializer.data})
+        return Response(serializer.data)
 
     def post(self, request, *args,  **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -103,6 +103,24 @@ class CommentsApi(APIView):
 
         return Response(data=comment_serializer.data)
 
+
+class LikeApi(APIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.LikeSerializer
+    
+    def get(self, request, *args,  **kwargs):
+        likes = models.Like.objects.filter(user_id=kwargs['userId'])
+        count = likes.count()
+        serializer = serializers.LikeSerializer(likes, many=True)
+        return Response({"count": count, "data": serializer.data})
+    
+    def post(self, request, *args,  **kwargs):
+        like_serializer = self.serializer_class(data=request.data)
+
+        like_serializer.is_valid(raise_exception=True)
+        like_serializer.save()
+
+        return Response(data=like_serializer.data)
 
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
