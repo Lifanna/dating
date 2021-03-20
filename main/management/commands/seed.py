@@ -39,13 +39,13 @@ class Command(BaseCommand):
 
     def populate_db(self):
         # admin
-        # city_names = []
-        # with open('main/management/commands/cities.txt', 'r', encoding='utf8') as file:
-        #     city_names = file.readlines()
+        city_names = []
+        with open('main/management/commands/cities.txt', 'r', encoding='utf8') as file:
+            city_names = file.readlines()
         
-        # for city_name in city_names:
-        #     city = models.City(name=city_name.strip())
-        #     city.save()
+        for city_name in city_names:
+            city = models.City(name=city_name.strip())
+            city.save()
 
         # для парсинга хобби
         with open('main/management/commands/interests.txt', 'r', encoding='utf8') as file:
@@ -64,16 +64,16 @@ class Command(BaseCommand):
         admin.set_password("")
         admin.save()
 
-        # df_names = pd.read_csv('main/management/commands/data.csv')
+        df_names = pd.read_csv('main/management/commands/data.csv')
 
-        # BASE_DIR = Path(__file__).resolve().parent
+        BASE_DIR = Path(__file__).resolve().parent
 
         name_surname = []
         for i in range(0, 500):
             first_name = df_names['name'][i]
             external_id = df_names['name'][i] + str(df_names['count'][i]) + str(df_names['rowid'][i])
 
-            image = "static/" + random.choice(os.listdir(str(BASE_DIR) + "/images"))
+            # image = "static/" + random.choice(os.listdir(str(BASE_DIR) + "/images"))
 
             i += 1
             last_name = df_names['name'][i]
@@ -82,7 +82,7 @@ class Command(BaseCommand):
             user = models.User(
                 first_name=first_name, 
                 last_name=last_name,
-                external_id=str(external_id),
+                aituUserId=str(external_id),
             )
 
             user.set_password("admin12345")
@@ -90,13 +90,13 @@ class Command(BaseCommand):
 
             city_id = random.randint(1, 10)
             user_profile = models.UserProfile(
-                external_id="", 
+                user_id=user.pk,
                 gender="f", 
                 city=models.City.objects.filter(id=city_id).first(), 
-                latitude=coordinates.get(city_id).split(',')[9], 
+                latitude=coordinates.get(city_id).split(',')[0], 
                 longitude=coordinates.get(city_id).split(',')[1], 
                 breefly=random.choice(interests), 
                 birth_date=self.get_random_birthday()
             )
-
+            print(i)
             user_profile.save()
