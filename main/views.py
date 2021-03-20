@@ -15,6 +15,12 @@ class UsersListApi(APIView):
     serializer_class = serializers.UsersListSerializer
 
     def get_object(self, userId):
+        likes = models.Like.objects.filter(user_id=kwargs['userId']).group_by()
+        count = likes.count()
+        serializer = serializers.LikeSerializer(likes, many=True)
+
+        
+
         return get_object_or_404(models.User.objects.filter(user_id=userId))
 
     def get(self, request, *args,  **kwargs):

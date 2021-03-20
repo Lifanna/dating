@@ -82,9 +82,9 @@ class UserProfile(models.Model):
 
     avatar = models.ImageField(upload_to='content', blank=True, null=True, default="content/Aaron_Eckhart_0001.jpg")
 
-    latitude = models.FloatField("Latitude")
+    latitude = models.FloatField("Latitude", blank=True, null=True)
 
-    longitude = models.FloatField("Longitude")
+    longitude = models.FloatField("Longitude", blank=True, null=True)
 
     breefly = models.TextField("Breefly")
 
