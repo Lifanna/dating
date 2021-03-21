@@ -31,6 +31,7 @@ urlpatterns = [
     path('likes/', views.LikeApi.as_view()),
     path('user/', views.UserProfileApi.as_view()),
     path('cities/', views.CityApi.as_view()),
+    path('avatar/', views.UserAvatarApi.as_view()),
 ]
 
 # if settings.DEBUG:

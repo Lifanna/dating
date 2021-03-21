@@ -55,6 +55,24 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class RegisterProfileSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(required=True, queryset=main_models.User.objects.all())
+
+    gender = serializers.CharField(max_length=1, allow_null=True, default="")
+
+    city = serializers.PrimaryKeyRelatedField(queryset=main_models.City.objects.all())
+
+    birth_date = serializers.DateField(allow_null=True, default="")
+
+    avatar = serializers.FileField(allow_null=True, default="content/Aaron_Eckhart_0001.jpg")
+
+    latitude = serializers.FloatField(allow_null=True, default=0)
+
+    longitude = serializers.FloatField(allow_null=True, default=0)
+
+    breefly = serializers.CharField(allow_null=True, default="")
+
+    is_deleted = serializers.BooleanField(default=False)
+
     class Meta:
         model = main_models.UserProfile
         fields = '__all__'

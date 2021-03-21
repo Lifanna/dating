@@ -29,28 +29,28 @@ class UsersListApi(APIView):
         return Response(serializer.data)
 
 
-# class UsersNearestApi(APIView):
-#     permission_classes = (IsAuthenticated,)
+class UsersNearestApi(APIView):
+    permission_classes = (IsAuthenticated,)
 
-#     def get(self, request):
-#         user_profile = models.UserProfile.objects.get(id=request.user.id)
+    def get(self, request):
+        user_profile = models.UserProfile.objects.get(id=request.user.id)
         
-#         friends = models.UserProfile.objects.filter(
-#             latitude__lte=user_profile.latitude, 
-#             latitude__gte=user_profile.latitude,
-#             longitude__lte=user_profile.longitude, 
-#             longitude__gte=user_profile.longitude
-#         )
-#         friend_profile = models.UserProfile.objects.exclude(id=request.user.id)
-#         user_coords = tuple(user_profile.latitude, user_profile.longitude) # (lat, lon)
-#         friend_coords = tuple(user_profile.latitude, user_profile.longitude)
+        friends = models.UserProfile.objects.filter(
+            latitude__lte=user_profile.latitude, 
+            latitude__gte=user_profile.latitude,
+            longitude__lte=user_profile.longitude, 
+            longitude__gte=user_profile.longitude
+        )
+        friend_profile = models.UserProfile.objects.exclude(id=request.user.id)
+        user_coords = tuple(user_profile.latitude, user_profile.longitude) # (lat, lon)
+        friend_coords = tuple(user_profile.latitude, user_profile.longitude)
 
-#         distance = haversine(lyon, paris)
+        distance = haversine(lyon, paris)
 
-#         print("DISTANCE:       ", distance)
+        print("DISTANCE:       ", distance)
 
-#         content = {'message': 'Hello, World!'}
-#         return Response(content)
+        content = {'message': 'Hello, World!'}
+        return Response(content)
 
 
 class RegisterApi(GenericAPIView):
@@ -76,6 +76,9 @@ class UserProfileApi(GenericAPIView):
 
     def get_object(self, userId):
         return get_object_or_404(models.UserProfile.objects.filter(user_id=userId))
+
+    def get_queryset(self):
+        return models.User.objects.all()
 
     def get(self, request, *args,  **kwargs):
         user_profile = self.get_object(request.user.id)
@@ -108,6 +111,38 @@ class UserProfileApi(GenericAPIView):
 
         return Response({
             "user": serializers.RegisterProfileSerializer(user_to_update, context=self.get_serializer_context()).data,
+        })
+
+
+class UserAvatarApi(GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.RegisterProfileSerializer
+
+    def get_object(self, userId):
+        return get_object_or_404(models.UserProfile.objects.filter(user_id=userId))
+
+    def get_queryset(self):
+        return models.User.objects.all()
+
+    def get(self, request, *args,  **kwargs):
+        pass
+        # user_profile = self.get_object(request.user.id)
+        # serializer = self.serializer_class(user_profile)
+        # user_serializer = serializers.UserSerializer(request.user)
+
+        # return Response({"userProfile": serializer.data})
+
+    def post(self, request, *args,  **kwargs):
+        user_to_update = models.User.objects.get(request.user.id)
+        user_to_update.avatar = request.data.get("avatar")
+        user_to_update.save()
+        
+        # serializer = self.get_serializer(data=request.data)
+        # serializer.is_valid(raise_exception=True)
+        # user_profile = serializer.save()
+
+        return Response({
+            "user": serializers.UserProfileSerializer(user_to_update, context=self.get_serializer_context()).data,
         })
 
 
